@@ -2,6 +2,7 @@ from __future__ import print_function
 
 from builtins import range
 from builtins import object
+from tkinter import Y
 import numpy as np
 from ..classifiers.linear_svm import *
 from ..classifiers.softmax import *
@@ -66,7 +67,9 @@ class LinearClassifier(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            idx = np.random.choice(range(num_train), batch_size, replace=False)
+            X_batch = X[idx]
+            y_batch = y[idx]
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -81,12 +84,12 @@ class LinearClassifier(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            self.W -= learning_rate * grad
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            if verbose and it % 100 == 0:
-                print("iteration %d / %d: loss %f" % (it, num_iters, loss))
+            # if verbose and it % 100 == 0:
+            #     print("iteration %d / %d: loss %f" % (it, num_iters, loss))
 
         return loss_history
 
@@ -111,7 +114,8 @@ class LinearClassifier(object):
         ###########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        scores = X.dot(self.W)
+        y_pred = np.argmax(scores, axis=1)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return y_pred

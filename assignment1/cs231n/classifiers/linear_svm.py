@@ -109,7 +109,12 @@ def svm_loss_vectorized(W, X, y, reg):
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    ds = np.zeros_like(margin)
+    ds[margin > 0] = 1
+    ds[range(N), y] -= np.sum(ds, axis=1)
+    ds /= N
+    dW = X.T.dot(ds)
+    dW += 2 * reg * W
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
