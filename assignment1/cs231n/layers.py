@@ -777,8 +777,16 @@ def svm_loss(x, y):
     ###########################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    N, C = x.shape
+    correct_scores = x[range(N), y].reshape(-1, 1)
+    margins = np.maximum(x - correct_scores + 1, 0)
+    margins[range(N), y] = 0
+    loss = np.sum(margins) / N
 
+    dx = np.zeros_like(margins)
+    dx[margins > 0] = 1
+    dx[range(N), y] -= np.sum(dx, axis=1)
+    dx /= N
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ###########################################################################
     #                             END OF YOUR CODE                            #
@@ -807,7 +815,16 @@ def softmax_loss(x, y):
     ###########################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    num_train = x.shape[0]
+
+    shift_scores = x - np.max(x, axis = 1).reshape(-1,1)
+    softmax_output = np.exp(shift_scores)/np.sum(np.exp(shift_scores), axis = 1).reshape(-1,1)
+    loss = -np.sum(np.log(softmax_output[range(num_train), list(y)]))
+    loss /= num_train 
+    
+    dx = softmax_output.copy()
+    dx[range(num_train), list(y)] += -1
+    dx /= num_train
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ###########################################################################
