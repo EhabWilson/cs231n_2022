@@ -91,7 +91,8 @@ class TwoLayerNet(object):
         ############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        X1 = X.reshape(X.shape[0], -1).dot(self.params['W1']) + self.params['b1']
+        X = X.reshape(X.shape[0], -1)
+        X1 = X.dot(self.params['W1']) + self.params['b1']
         scores = X1.dot(self.params['W2']) + self.params['b2']
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
@@ -120,12 +121,14 @@ class TwoLayerNet(object):
         loss = loss + 0.5 * self.reg * (np.sum(self.params['W1']**2) + np.sum(self.params['W2']**2))
 
         grads['W2'] = X1.T.dot(ds) + self.reg * self.params['W2']
-        grads['b2'] = np.ones((1, ds.shape[0])).dot(ds)
+        # grads['b2'] = np.ones((1, ds.shape[0])).dot(ds).reshape(ds.shape[1])
+        grads['b2'] = np.sum(ds, axis=0)
 
         ds1 = ds.dot(self.params['W2'].T)   # ds1: (N, hidden_dim)
 
         grads['W1'] = X.T.dot(ds1) + self.reg * self.params['W1']
-        grads['b1'] = np.ones((1, ds1.shape[0])).dot(ds1)
+        # grads['b1'] = np.ones((1, ds1.shape[0])).dot(ds1).reshape(ds1.shape[1])
+        grads['b1'] = np.sum(ds1, axis=0)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         ############################################################################
